@@ -24,7 +24,7 @@
 		krpano.preloadsound('%CURRENTXML%/res/explosion.wav');
 		krpano.preloadsound('%CURRENTXML%/res/shoot.wav');
 		krpano.preloadsound('%CURRENTXML%/res/The Dawn - Waiting for the sun.mp3');
-		
+
 		<!-- add an action for playing an explosion sound -->
 		krpano.explosionsound = function(volume, x, y, z)
 		{
@@ -48,7 +48,20 @@
 
 	]]></action>
 
+	<action type="Javascript" autorun="preinit"><![CDATA[
+		krpano.customParsePath = function(url) {
+			console.log("フィルタ適用前 の URL: ", url);
 
+      // 完全なパスを返す（実際は正規表現の嵐か）
+			if (url === "examples/webvr-drone-attack/res/robot.png") {
+			  url = "image2.jpg";
+			}
+
+			console.log("フィルタ適用後 の URL: ", url);
+
+			return url;
+		}
+	]]></action>
 
 	<!-- got-hit post-processing effect (a color-shift + color-blend effect) -->
 	<plugin name="pp_hit_effect"
@@ -66,16 +79,14 @@
 		);
 	</action>
 
-
-
 	<!-- webvr -->
 	<include url="%VIEWER%/plugins/webvr.xml" />
-	
+
 	<!-- overwrite/adjust some settings (for better performance) -->
 	<plugin name="webvr"
 		auto_oversampling="false"
 		/>
-		
+
 	<!-- move the default vr-cursor from the webvr.xml farther away -->
 	<style name="vr_cursor_style" depth="1000" />
 
@@ -419,12 +430,12 @@
 		function gameplay_tick(deltatime)
 		{
 			krpano.gameplay.playtime += deltatime;
-		
+
 			var speed = krpano.gameplay.speed * (deltatime/16);
-			
+
 			// get slowly faster over time
 			krpano.gameplay.speed += krpano.gameplay.playtime / (100*1000*1000);
-			
+
 			for (var i=0; i < robots.length; i++)
 			{
 				var robot = robots[i];
@@ -469,7 +480,7 @@
 			var tick = krpano.timertick;
 			var dt = tick - lasttick;
 			lasttick = tick;
-		
+
 			if (krpano.gameplay.state == "playing")
 			{
 				gameplay_tick(dt);
